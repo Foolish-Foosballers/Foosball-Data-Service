@@ -26,9 +26,11 @@ query = "SELECT history.player_id, \
 
 @app.route("/")
 def index():
+    cursor.execute("CREATE TABLE test (PlayerId integer, Name text);")
+    cursor.execute("INSERT INTO test VALUES (1, 'Daniel'), (2, 'Sara');")
     cursor.execute("SELECT * FROM test")
     result = cursor.fetchall()
-    return str(result)
+    return "Results:\n" + str(result)
 
 if __name__ == "__main__":
     app.run()
