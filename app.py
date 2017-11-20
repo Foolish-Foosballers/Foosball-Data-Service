@@ -30,7 +30,7 @@ def assertDatabase():
     """
     
     # Create side type to represent sides of table (left and right)
-    cursor.execute("CREATE TYPE IF NOT EXISTS side AS ENUM ('left', 'right');")
+    # cursor.execute("CREATE TYPE IF NOT EXISTS side AS ENUM ('left', 'right');")
 
     cursor.execute("CREATE TABLE IF NOT EXISTS players (\
                         Id int PRIMARY KEY,\
@@ -47,42 +47,42 @@ def assertDatabase():
                         Shutouts int\
                    );")
 
-    cursor.execute("CREATE TABLE IF NOT EXISTS games (\
-                        Id int PRIMARY KEY,\
-                        EndTime timestamp with time zone,\
-                        Single bool,\
-                        LeftScore int,\
-                        RightScore int,\
-                        WinMargin int,\
-                        Winner side\
-                   );")
+    # cursor.execute("CREATE TABLE IF NOT EXISTS games (\
+    #                     Id int PRIMARY KEY,\
+    #                     EndTime timestamp with time zone,\
+    #                     Single bool,\
+    #                     LeftScore int,\
+    #                     RightScore int,\
+    #                     WinMargin int,\
+    #                     Winner side\
+    #                );")
 
-    cursor.execute("CREATE TABLE IF NOT EXISTS series (\
-                        Id int PRIMARY KEY,\
-                        NumGames int,\
-                        LeftWins int,\
-                        RightWins int\
-                   );")
+    # cursor.execute("CREATE TABLE IF NOT EXISTS series (\
+    #                     Id int PRIMARY KEY,\
+    #                     NumGames int,\
+    #                     LeftWins int,\
+    #                     RightWins int\
+    #                );")
 
-    cursor.execute("CREATE TABLE IF NOT EXISTS history (\
-                        GameId int REFERENCES games,\
-                        PlayerId int REFERENCES players,\
-                        Side side,\
-                        SeriesId int REFERENCES series,\
-                        PRIMARY KEY (GameId, PlayerId)\
-                   );")
+    # cursor.execute("CREATE TABLE IF NOT EXISTS history (\
+    #                     GameId int REFERENCES games,\
+    #                     PlayerId int REFERENCES players,\
+    #                     Side side,\
+    #                     SeriesId int REFERENCES series,\
+    #                     PRIMARY KEY (GameId, PlayerId)\
+    #                );")
     
-    cursor.execute("INSERT INTO players VALUES (\
-                        (212570174, 'Sara', 'Stiklickas', 'sarastik', 'sara.stiklickas@ge.com', current_timestamp, 0, 0, 0, 0, 0, 0);")
+    # cursor.execute("INSERT INTO players VALUES (\
+    #                     (212570174, 'Sara', 'Stiklickas', 'sarastik', 'sara.stiklickas@ge.com', current_timestamp, 0, 0, 0, 0, 0, 0);")
 
 @app.route("/")
 def index():
-    cursor.execute("CREATE TABLE IF NOT EXISTS test (Id int, Name text);")
-    cursor.execute("INSERT INTO test VALUES (3, 'Brett');")
-    cursor.execute("SELECT * FROM test")
+    # cursor.execute("CREATE TABLE IF NOT EXISTS test (Id int, Name text);")
+    # cursor.execute("INSERT INTO test VALUES (3, 'Brett');")
+    cursor.execute("SELECT * FROM players")
     result = cursor.fetchall()
     return "Results:\n" + str(result)
 
 if __name__ == "__main__":
-    # assertDatabase()
+    assertDatabase()
     app.run()
