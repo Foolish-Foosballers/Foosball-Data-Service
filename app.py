@@ -77,10 +77,12 @@ def assertDatabase():
 
 @app.route("/")
 def index():
-    cursor.execute("SELECT * FROM players")
+    cursor.execute("CREATE TABLE IF NOT EXISTS test (Id int, Name text);")
+    cursor.execute("INSERT INTO test VALUES (3, 'Brett');")
+    cursor.execute("SELECT * FROM test")
     result = cursor.fetchall()
     return "Results:\n" + str(result)
 
 if __name__ == "__main__":
-    assertDatabase()
+    # assertDatabase()
     app.run()
