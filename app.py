@@ -85,4 +85,5 @@ def index():
 
 if __name__ == "__main__":
     assertDatabase()
+    print 'asserted'
     app.run()
