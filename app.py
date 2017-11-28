@@ -31,7 +31,7 @@ def assertDatabase():
     
     # Create side type to represent sides of table (left and right)
     # cursor.execute("CREATE TYPE IF NOT EXISTS side AS ENUM ('left', 'right');")
-
+    print "creating table"
     cursor.execute("CREATE TABLE IF NOT EXISTS players (\
                         Id int PRIMARY KEY,\
                         FirstName text,\
@@ -46,6 +46,7 @@ def assertDatabase():
                         TotalPoints int,\
                         Shutouts int\
                    );")
+    print "done creating table"
 
     # cursor.execute("CREATE TABLE IF NOT EXISTS games (\
     #                     Id int PRIMARY KEY,\
