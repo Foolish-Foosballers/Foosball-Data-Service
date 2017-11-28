@@ -82,6 +82,7 @@ def index():
     # cursor.execute("SELECT * FROM players")
     # result = cursor.fetchall()
     # return "Results:\n" + str(result)
+    return "hello"
 
 if __name__ == "__main__":
     assertDatabase()
