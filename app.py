@@ -79,9 +79,9 @@ def assertDatabase():
 def index():
     # cursor.execute("CREATE TABLE IF NOT EXISTS test (Id int, Name text);")
     # cursor.execute("INSERT INTO test VALUES (3, 'Brett');")
-    cursor.execute("SELECT * FROM players")
-    result = cursor.fetchall()
-    return "Results:\n" + str(result)
+    # cursor.execute("SELECT * FROM players")
+    # result = cursor.fetchall()
+    # return "Results:\n" + str(result)
 
 if __name__ == "__main__":
     assertDatabase()
