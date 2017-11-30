@@ -1,91 +1,85 @@
 from flask import Flask
-import os, sys
-import urlparse
-import psycopg2
+from datetime import datetime
+import logging
+from flask_sqlalchemy import SQLAlchemy
+import os
 
-# Flask app
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+db = SQLAlchemy(app)
 
-# PostgreSQL connector
-urlparse.uses_netloc.append("postgres")
-url = urlparse.urlparse(os.environ["DATABASE_URL"])
+class Player(db.Model):
+    Id = db.Column(db.Integer, primary_key=True, nullable=False)
+    FirstName = db.Column(db.String(120), nullable=False)
+    LastName = db.Column(db.String(120), nullable=False)
+    Username = db.Column(db.String(80), unique=True, nullable=False)
+    Email = db.Column(db.String(120), unique=True, nullable=False)
+    SignupDate = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    TotalTimePlayed = db.Column(db.Integer, nullable=False, default=0)
+    GameWins = db.Column(db.Integer, nullable=False, default=0)
+    SeriesWins = db.Column(db.Integer, nullable=False, default=0)
+    TotalPoints = db.Column(db.Integer, nullable=False, default=0)
+    Shutouts = db.Column(db.Integer, nullable=False, default=0)
+    Ranking = db.Column(db.Integer, nullable=False, default=0)
 
-conn = psycopg2.connect(
-    database=url.path[1:],
-    user=url.username,
-    password=url.password,
-    host=url.hostname,
-    port=url.port
-)
+class Game(db.Model):
+    Id = db.Column(db.Integer, primary_key=True, nullable=False)
+    EndTime = db.Column(db.DateTime, nullable=False, default=datetime.utcnow) 
+    Single = db.Column(db.Boolean, nullable=False)
+    LeftScore = db.Column(db.Integer, nullable=False)
+    RightScore = db.Column(db.Integer, nullable=False)
+    WinMargin = db.Column(db.Integer, nullable=False)
+    Winner = db.Column(db.String(120), nullable=False)
 
-cursor = conn.cursor()
+class Series(db.Model):
+    Id = db.Column(db.Integer, primary_key=True, nullable=False)
+    NumGames = db.Column(db.Integer, nullable=False)
+    LeftWins = db.Column(db.Integer, nullable=False)
+    RightWins = db.Column(db.Integer, nullable=False)
 
-query = "SELECT history.player_id, \
-            (SELECT h.player_id, COUNT(*) FROM history AS h WHERE h.game_id = history.game_id AND h.player_id IS NOT history.player_id) AS num_games \
-        FROM history"
+class History(db.Model):
+    Id = db.Column(db.String(120), primary_key=True, nullable=False)
+    GameId = db.Column(db.Integer, nullable=False)
+    PlayerId = db.Column(db.Integer, nullable=False)
+    SeriesId = db.Column(db.Integer, nullable=False)
+    Side = db.Column(db.String(80), nullable=False)
 
-def assertDatabase():
-    """
-    Confirm that the correct tables all exist and create them if they don't.
-    """
+
+@app.route('/')
+def homepage():
+    gunicorn_error_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers.extend(gunicorn_error_logger.handlers)
+    app.logger.setLevel(logging.DEBUG)
+    app.logger.debug('this will show in the log')
+    # db.drop_all()
+    # db.create_all()
+
+    # player = Player(Id=0, FirstName="Daniel", LastName="Lerner",
+    # Username="dlernz", Email="daniel.lerner@ge.com")
+    # db.session.add(player)
+    # player = Player(Id=1, FirstName="Sara", LastName="Stik",
+    # Username="sarastik", Email="sara.stik@ge.com")
+    # db.session.add(player)
+    # player = Player(Id=2, FirstName="Brett", LastName="Oberg",
+    # Username="wisco", Email="brett.oberg@ge.com")
+    # db.session.add(player)
+    # db.session.commit()
+
+    # output = Player.query.get(0)
+    # app.logger.debug(output.FirstName)
+    # output = Player.query.get(1)
+    # app.logger.debug(output.FirstName)
+    # output = Player.query.get(2)
+    # app.logger.debug(output.FirstName)
     
-    # Create side type to represent sides of table (left and right)
-    # cursor.execute("CREATE TYPE IF NOT EXISTS side AS ENUM ('left', 'right');")
-    sys.stdout.write("creating table")
-    cursor.execute("CREATE TABLE IF NOT EXISTS players (\
-                        Id int PRIMARY KEY,\
-                        FirstName text,\
-                        LastName text,\
-                        Username text,\
-                        Email text,\
-                        SignupDate timestamp with time zone,\
-                        TotalTimePlayed int,\
-                        GameWins int,\
-                        TotalGamesPlayed int,\
-                        SeriesWins int,\
-                        TotalPoints int,\
-                        Shutouts int\
-                   );")
-    sys.stdout.write("done creating table")
+    the_time = datetime.now().strftime("%A, %d %b %Y %l:%M %p")
 
-    # cursor.execute("CREATE TABLE IF NOT EXISTS games (\
-    #                     Id int PRIMARY KEY,\
-    #                     EndTime timestamp with time zone,\
-    #                     Single bool,\
-    #                     LeftScore int,\
-    #                     RightScore int,\
-    #                     WinMargin int,\
-    #                     Winner side\
-    #                );")
+    return """
+    <h1>Hello heroku</h1>
+    <p>It is currently {time}.</p>
 
-    # cursor.execute("CREATE TABLE IF NOT EXISTS series (\
-    #                     Id int PRIMARY KEY,\
-    #                     NumGames int,\
-    #                     LeftWins int,\
-    #                     RightWins int\
-    #                );")
+    <img src="http://loremflickr.com/600/400">
+    """.format(time=the_time)
 
-    # cursor.execute("CREATE TABLE IF NOT EXISTS history (\
-    #                     GameId int REFERENCES games,\
-    #                     PlayerId int REFERENCES players,\
-    #                     Side side,\
-    #                     SeriesId int REFERENCES series,\
-    #                     PRIMARY KEY (GameId, PlayerId)\
-    #                );")
-    
-    # cursor.execute("INSERT INTO players VALUES (\
-    #                     (212570174, 'Sara', 'Stiklickas', 'sarastik', 'sara.stiklickas@ge.com', current_timestamp, 0, 0, 0, 0, 0, 0);")
-
-@app.route("/")
-def index():
-    # cursor.execute("CREATE TABLE IF NOT EXISTS test (Id int, Name text);")
-    # cursor.execute("INSERT INTO test VALUES (3, 'Brett');")
-    # cursor.execute("SELECT * FROM players")
-    # result = cursor.fetchall()
-    # return "Results:\n" + str(result)
-    return "hello"
-
-if __name__ == "__main__":
-    assertDatabase()
-    sys.stdout.write('asserted')
+if __name__ == '__main__':
     app.run()
