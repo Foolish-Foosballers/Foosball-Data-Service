@@ -42,8 +42,8 @@ class Series(db.Model):
     RightWins = db.Column(db.Integer, nullable=False)
 
 class History(db.Model):
-    GameId = db.Column(db.Integer, primary_key=True, db.ForeignKey('game.Id'), nullable=False)
-    PlayerId = db.Column(db.Integer, primary_key=True, db.ForeignKey('player.Id'), nullable=False)
+    GameId = db.Column(db.Integer, db.ForeignKey('game.Id'), primary_key=True, nullable=False)
+    PlayerId = db.Column(db.Integer, db.ForeignKey('player.Id'), primary_key=True, nullable=False)
     SeriesId = db.Column(db.Integer, db.ForeignKey('series.Id'), nullable=False)
     Side = db.Column(db.String(10), nullable=False)
 
