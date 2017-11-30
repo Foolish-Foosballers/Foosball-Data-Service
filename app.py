@@ -60,18 +60,18 @@ def dropTables():
 @app.route('/')
 def homepage():
     # dropTables()
-    createTables()
+    # createTables()
 
-    # player = Player(Id=0, FirstName="Daniel", LastName="Lerner",
-    # Username="dlernz", Email="daniel.lerner@ge.com")
-    # db.session.add(player)
-    # player = Player(Id=1, FirstName="Sara", LastName="Stik",
-    # Username="sarastik", Email="sara.stik@ge.com")
-    # db.session.add(player)
-    # player = Player(Id=2, FirstName="Brett", LastName="Oberg",
-    # Username="wisco", Email="brett.oberg@ge.com")
-    # db.session.add(player)
-    # db.session.commit()
+    player = Player(Id=0, FirstName="Daniel", LastName="Lerner",
+    Username="dlernz", Email="daniel.lerner@ge.com")
+    db.session.add(player)
+    player = Player(Id=1, FirstName="Sara", LastName="Stik",
+    Username="sarastik", Email="sara.stik@ge.com")
+    db.session.add(player)
+    player = Player(Id=2, FirstName="Brett", LastName="Oberg",
+    Username="wisco", Email="brett.oberg@ge.com")
+    db.session.add(player)
+    db.session.commit()
 
     # output = Player.query.get(0)
     # app.logger.debug(output.FirstName)
