@@ -44,6 +44,10 @@ class History(db.Model):
     SeriesId = db.Column(db.Integer, nullable=False)
     Side = db.Column(db.String(80), nullable=False)
 
+def createTables():
+    app.logger.debug('creating tables')
+    db.create_all()
+    app.logger.debug('created tables')
 
 @app.route('/')
 def homepage():
@@ -52,7 +56,7 @@ def homepage():
     app.logger.setLevel(logging.DEBUG)
     app.logger.debug('this will show in the log')
     # db.drop_all()
-    # db.create_all()
+
 
     # player = Player(Id=0, FirstName="Daniel", LastName="Lerner",
     # Username="dlernz", Email="daniel.lerner@ge.com")
@@ -82,4 +86,5 @@ def homepage():
     """.format(time=the_time)
 
 if __name__ == '__main__':
+    createTables()
     app.run()
