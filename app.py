@@ -60,7 +60,7 @@ def dropTables():
 @app.route('/')
 def homepage():
     dropTables()
-    createTables()
+    # createTables()
 
     # player = Player(Id=0, FirstName="Daniel", LastName="Lerner",
     # Username="dlernz", Email="daniel.lerner@ge.com")
