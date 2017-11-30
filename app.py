@@ -51,6 +51,7 @@ def createTables():
 
 @app.route('/')
 def homepage():
+    createTables()
     gunicorn_error_logger = logging.getLogger('gunicorn.error')
     app.logger.handlers.extend(gunicorn_error_logger.handlers)
     app.logger.setLevel(logging.DEBUG)
@@ -86,5 +87,4 @@ def homepage():
     """.format(time=the_time)
 
 if __name__ == '__main__':
-    createTables()
     app.run()
