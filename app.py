@@ -89,5 +89,10 @@ def homepage():
     <img src="http://loremflickr.com/600/400">
     """.format(time=the_time)
 
+@app.route('/players/<username>')
+def players():
+    user = User.query.filter_by(username=username).first_or_404()
+    return user
+
 if __name__ == '__main__':
     app.run()
