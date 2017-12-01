@@ -91,8 +91,8 @@ def homepage():
 
 @app.route('/players/<username>')
 def players(username):
-    user = User.query.filter_by(Username=username).first_or_404()
-    return user
+    player = Player.query.filter_by(Username=username).first_or_404()
+    return player
 
 if __name__ == '__main__':
     app.run()
