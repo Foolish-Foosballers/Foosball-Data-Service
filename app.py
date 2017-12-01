@@ -3,6 +3,7 @@ from datetime import datetime
 import logging
 from flask_sqlalchemy import SQLAlchemy
 import os
+import json
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
@@ -91,8 +92,8 @@ def homepage():
 
 @app.route('/players/<username>')
 def players(username):
-    player = Player.query.filter_by(Username=username).first_or_404()
-    return player
+    player = db.session.query.filter_by(Username=username).first_or_404()
+    return json.dumps(player)
 
 if __name__ == '__main__':
     app.run()
