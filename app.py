@@ -94,8 +94,8 @@ def homepage():
 def players(username):
     player = Player.query.filter_by(Username=username).first_or_404()
     print "here"
-    print json.dumps(player)
-    return json.dumps(player)
+    print type(player)
+    return json.loads(player)
 
 if __name__ == '__main__':
     app.run()
