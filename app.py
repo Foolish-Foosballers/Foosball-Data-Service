@@ -93,6 +93,8 @@ def homepage():
 @app.route('/players/<username>')
 def players(username):
     player = db.session.query.filter_by(Username=username).first_or_404()
+    print "here"
+    print json.dumps(player)
     return json.dumps(player)
 
 if __name__ == '__main__':
