@@ -26,6 +26,8 @@ class Player(db.Model):
     TotalPoints = db.Column(db.Integer, nullable=False, default=0)
     Shutouts = db.Column(db.Integer, nullable=False, default=0)
     Ranking = db.Column(db.Integer, nullable=False, default=0)
+    def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 class Game(db.Model):
     Id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -95,7 +97,7 @@ def players(username):
     player = Player.query.filter_by(Username=username).first_or_404()
     print "here"
     print type(player)
-    return json.loads(player)
+    return json.dumps(player.as_dict())
 
 if __name__ == '__main__':
     app.run()
