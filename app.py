@@ -90,7 +90,7 @@ def homepage():
     """.format(time=the_time)
 
 @app.route('/players/<username>')
-def players():
+def players(username):
     user = User.query.filter_by(Username=username).first_or_404()
     return user
 
