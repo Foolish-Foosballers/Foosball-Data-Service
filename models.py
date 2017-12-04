@@ -29,14 +29,26 @@ class Game(db.Model):
     WinMargin = db.Column(db.Integer, nullable=False)
     Winner = db.Column(Enum(, nullable=False)
 
+    def as_dict(self):
+        """Method for converting model to a dictionary for JSON serializable output"""
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 class Series(db.Model):
     Id = db.Column(db.Integer, primary_key=True, nullable=False)
     NumGames = db.Column(db.Integer, nullable=False)
     LeftWins = db.Column(db.Integer, nullable=False)
     RightWins = db.Column(db.Integer, nullable=False)
 
+    def as_dict(self):
+        """Method for converting model to a dictionary for JSON serializable output"""
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 class History(db.Model):
     GameId = db.Column(db.Integer, db.ForeignKey('game.Id'), primary_key=True, nullable=False)
     PlayerId = db.Column(db.Integer, db.ForeignKey('player.Id'), primary_key=True, nullable=False)
     SeriesId = db.Column(db.Integer, db.ForeignKey('series.Id'), nullable=False)
     Side = db.Column(db.String(10), nullable=False)
+
+    def as_dict(self):
+        """Method for converting model to a dictionary for JSON serializable output"""
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}

@@ -1,9 +1,7 @@
 from flask import Flask
 from datetime import date, datetime
-import logging
 from flask_sqlalchemy import SQLAlchemy
-import os
-import json
+import os, json, logging
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
@@ -63,9 +61,29 @@ def homepage():
     <img src="http://loremflickr.com/600/400">
     """.format(time=the_time)
 
+@app.route('/players')
+def players():
+    players = Player.query.all()
+    return json.dumps([player.as_dict() for player in players], default=jsonSerial)
+
 @app.route('/players/<id>')
-def players(id):
-    player = Player.query.filter_by(Id=id).first_or_404()
+def playersById(id):
+    player = Player.query.get_or_404(id)
+    return json.dumps(player.as_dict(), default=jsonSerial)
+
+@app.route('/players/<username>')
+def playersByUsername(username):
+    player = Player.query.filter_by(Username=username).first_or_404()
+    return json.dumps(player.as_dict(), default=jsonSerial)
+
+@app.route('/games')
+def games():
+    games = Games.query.all()
+    return json.dumps([game.as_dict() for game in games], default=jsonSerial)
+
+@app.route('/games/<id>')
+def gamesById(id):
+    game = Game.query.get_or_404(id)
     return json.dumps(player.as_dict(), default=jsonSerial)
 
 if __name__ == '__main__':
