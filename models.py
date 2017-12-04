@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from app import db
 
 class Player(db.Model):
     Id = db.Column(db.Integer, primary_key=True, nullable=False)
