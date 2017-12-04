@@ -26,8 +26,10 @@ class Player(db.Model):
     TotalPoints = db.Column(db.Integer, nullable=False, default=0)
     Shutouts = db.Column(db.Integer, nullable=False, default=0)
     Ranking = db.Column(db.Integer, nullable=False, default=0)
+
     def as_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        """Method for converting model to a dictionary for JSON serializable output"""
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 class Game(db.Model):
     Id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -99,11 +101,9 @@ def homepage():
     <img src="http://loremflickr.com/600/400">
     """.format(time=the_time)
 
-@app.route('/players/<username>')
-def players(username):
-    player = Player.query.filter_by(Username=username).first_or_404()
-    print "here"
-    print type(player)
+@app.route('/players/<id>')
+def players(id):
+    player = Player.query.filter_by(Id=id).first_or_404()
     return json.dumps(player.as_dict(), default=jsonSerial)
 
 if __name__ == '__main__':
