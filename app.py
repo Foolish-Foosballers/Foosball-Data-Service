@@ -1,10 +1,8 @@
 from flask import Flask
 from datetime import date, datetime
 from flask_sqlalchemy import SQLAlchemy
-from models import *
-import os
-import json
-import logging
+import os, json, logging
+import models
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
