@@ -31,35 +31,18 @@ def jsonSerial(obj):
 
 @app.route('/')
 def homepage():
-    # dropTables()
-    # createTables()
-
-    # player = Player(Id=0, FirstName="Daniel", LastName="Lerner",
-    # Username="dlernz", Email="daniel.lerner@ge.com")
-    # db.session.add(player)
-    # player = Player(Id=1, FirstName="Sara", LastName="Stik",
-    # Username="sarastik", Email="sara.stik@ge.com")
-    # db.session.add(player)
-    # player = Player(Id=2, FirstName="Brett", LastName="Oberg",
-    # Username="wisco", Email="brett.oberg@ge.com")
-    # db.session.add(player)
-    # db.session.commit()
-
-    output = Player.query.get(0)
-    app.logger.debug(output.FirstName)
-    output = Player.query.get(1)
-    app.logger.debug(output.FirstName)
-    output = Player.query.get(2)
-    app.logger.debug(output.FirstName)
-    
-    the_time = datetime.now().strftime("%A, %d %b %Y %l:%M %p")
-
     return """
-    <h1>Hello heroku</h1>
-    <p>It is currently {time}.</p>
-
-    <img src="http://loremflickr.com/600/400">
-    """.format(time=the_time)
+    <h1>Welcome to the Foosball Data Service.</h1>
+    <p>Here is a list of available routes:</p>
+    <ul>
+        <li><a href="/">/</a></li>
+        <li><a href="/players">/players</a></li>
+        <li><a>/players/&ltid&gt</a></li>
+        <li><a>/players/&ltusername&gt</a></li>
+        <li><a href="/games">/games</a></li>
+        <li><a>/games/&ltid&gt</a></li>
+    </ul>
+    """
 
 @app.route('/players')
 def players():
