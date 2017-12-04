@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from app import db
 
 class Player(db.Model):
     Id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -27,7 +26,7 @@ class Game(db.Model):
     LeftScore = db.Column(db.Integer, nullable=False)
     RightScore = db.Column(db.Integer, nullable=False)
     WinMargin = db.Column(db.Integer, nullable=False)
-    Winner = db.Column(Enum(, nullable=False)
+    Winner = db.Column(db.String(10), nullable=False)
 
     def as_dict(self):
         """Method for converting model to a dictionary for JSON serializable output"""
