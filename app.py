@@ -1,5 +1,5 @@
 from flask import Flask
-from datetime import datetime
+from datetime import date, datetime
 import logging
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -60,6 +60,13 @@ def dropTables():
     db.drop_all()
     app.logger.debug('dropped tables')
 
+def jsonSerial(obj):
+    """JSON serializer for objects not serializable by default json code"""
+
+    if isinstance(obj, (datetime, date)):
+        return obj.isoformat()
+    raise TypeError ("Type %s not serializable" % type(obj))
+
 @app.route('/')
 def homepage():
     # dropTables()
@@ -97,7 +104,7 @@ def players(username):
     player = Player.query.filter_by(Username=username).first_or_404()
     print "here"
     print type(player)
-    return json.dumps(player.as_dict())
+    return json.dumps(player.as_dict(), default=jsonSerial)
 
 if __name__ == '__main__':
     app.run()
