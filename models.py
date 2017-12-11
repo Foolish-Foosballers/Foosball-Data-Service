@@ -21,7 +21,7 @@ class Player(db.Model):
     Shutouts = db.Column(db.Integer, nullable=False, default=0)
     Ranking = db.Column(db.Integer, nullable=False, default=0)
 
-    def __init__(self, firstName, lastName, username, email)
+    def __init__(self, firstName, lastName, username, email):
         self.FirstName = firstName
         self.LastName = lastName
         self.Username = username

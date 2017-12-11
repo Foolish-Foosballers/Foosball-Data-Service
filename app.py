@@ -86,7 +86,7 @@ def playersByUsernameJsonify(username):
 
 @app.route('/games')
 def games():
-    games = Games.query.all()
+    games = Game.query.all()
     return json.dumps([game.as_dict() for game in games], default=jsonSerial)
 
 @app.route('/games/<id>')
