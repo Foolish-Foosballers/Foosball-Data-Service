@@ -51,7 +51,7 @@ def players():
 
 @app.route('/players/jsonify')
 def playersWithJsonify():
-    return jsonify({'players': Players.query.all()})
+    return jsonify({'players': Player.query.all()})
 
 @app.route('/players/<id>')
 def playersById(id):
@@ -60,14 +60,14 @@ def playersById(id):
 
 @app.route('/players/<id>/jsonify')
 def playersByIdJsonify(id):
-    return jsonify({'player': Players.query.get(id)})
+    return jsonify({'player': Player.query.get(id)})
 
 @app.route('/players', methods=['POST'])
 def addPlayer():
     if not request.json:
         print "no json", request
         abort(400)
-    for attribute in ['FirstName, LastName, Username, Email']: 
+    for attribute in ['FirstName', 'LastName', 'Username', 'Email']: 
         if attribute not in request.json:
             print "no attribute", attribute
             abort(400)
@@ -83,7 +83,7 @@ def playersByUsername(username):
 
 @app.route('/players/<username>/jsonify')
 def playersByUsernameJsonify(username):
-    return jsonify({'player': Players.query.first(username)})
+    return jsonify({'player': Player.query.first(username)})
 
 @app.route('/games')
 def games():
