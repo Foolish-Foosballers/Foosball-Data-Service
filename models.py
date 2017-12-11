@@ -21,6 +21,19 @@ class Player(db.Model):
     Shutouts = db.Column(db.Integer, nullable=False, default=0)
     Ranking = db.Column(db.Integer, nullable=False, default=0)
 
+    def __init__(self, firstName, lastName, username, email)
+        self.FirstName = firstName
+        self.LastName = lastName
+        self.Username = username
+        self.Email = email
+        self.SignupDate = datetime.now()
+        self.TotalTimePlayed = 0
+        self.GameWins = 0
+        self.SeriesWins = 0
+        self.TotalPoints = 0
+        self.Shutouts = 0
+        self.Ranking = 0
+
     def as_dict(self):
         """Method for converting model to a dictionary for JSON serializable output"""
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}

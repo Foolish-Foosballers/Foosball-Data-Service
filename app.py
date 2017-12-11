@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from datetime import date, datetime
 from flask_sqlalchemy import SQLAlchemy
 import os, json, logging
@@ -31,6 +31,7 @@ def jsonSerial(obj):
 
 @app.route('/')
 def homepage():
+    createTables()
     return """
     <h1>Welcome to the Foosball Data Service.</h1>
     <p>Here is a list of available routes:</p>
@@ -49,15 +50,39 @@ def players():
     players = Player.query.all()
     return json.dumps([player.as_dict() for player in players], default=jsonSerial)
 
+@app.route('/players/jsonify')
+def playersWithJsonify():
+    return jsonify({'players': Players.query.all()})
+
 @app.route('/players/<id>')
 def playersById(id):
     player = Player.query.get_or_404(id)
     return json.dumps(player.as_dict(), default=jsonSerial)
 
+@app.route('/players/<id>/jsonify')
+def playersByIdJsonify(id):
+    return jsonify({'player': Players.query.get(id)})
+
+@app.route('/players', methods=['POST'])
+def addPlayer():
+    if not request.json:
+        abort(400)
+    for attribute in ['FirstName, LastName, Username, Email']: 
+        if attribute not in request.json:
+            abort(400)
+    newPlayer = Player(request.json.FirstName, request.json.LastName, request.json.Username, request.json.Email)
+    db.session.add(newPlayer)
+    db.session.commit()
+    return (jsonify({'player': player}), 201)
+
 @app.route('/players/<username>')
 def playersByUsername(username):
     player = Player.query.filter_by(Username=username).first_or_404()
     return json.dumps(player.as_dict(), default=jsonSerial)
+
+@app.route('/players/<username>/jsonify')
+def playersByUsernameJsonify(username):
+    return jsonify({'player': Players.query.first(username)})
 
 @app.route('/games')
 def games():
