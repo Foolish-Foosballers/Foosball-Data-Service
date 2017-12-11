@@ -31,7 +31,6 @@ def jsonSerial(obj):
 
 @app.route('/')
 def homepage():
-    createTables()
     return """
     <h1>Welcome to the Foosball Data Service.</h1>
     <p>Here is a list of available routes:</p>
