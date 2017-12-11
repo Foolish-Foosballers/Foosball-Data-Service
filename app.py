@@ -65,9 +65,11 @@ def playersByIdJsonify(id):
 @app.route('/players', methods=['POST'])
 def addPlayer():
     if not request.json:
+        print "no json", request
         abort(400)
     for attribute in ['FirstName, LastName, Username, Email']: 
         if attribute not in request.json:
+            print "no attribute", attribute
             abort(400)
     newPlayer = Player(request.json.FirstName, request.json.LastName, request.json.Username, request.json.Email)
     db.session.add(newPlayer)
