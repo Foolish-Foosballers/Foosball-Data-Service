@@ -45,11 +45,6 @@ def homepage():
     """
 
 @app.route('/players')
-def players():
-    players = Player.query.all()
-    return json.dumps([player.as_dict() for player in players], default=jsonSerial)
-
-@app.route('/players/jsonify')
 def playersWithJsonify():
     return jsonify({'players': Player.query.all()})
 
@@ -71,7 +66,7 @@ def addPlayer():
         if attribute not in request.json:
             print "no attribute", attribute
             abort(400)
-    newPlayer = Player(request.json.FirstName, request.json.LastName, request.json.Username, request.json.Email)
+    newPlayer = Player(request.json['FirstName'], request.json['LastName'], request.json['Username'], request.json['Email'])
     db.session.add(newPlayer)
     db.session.commit()
     return (jsonify({'player': player}), 201)
