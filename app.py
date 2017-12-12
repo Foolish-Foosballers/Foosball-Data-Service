@@ -29,6 +29,10 @@ def jsonSerial(obj):
         return obj.isoformat()
     raise TypeError ("Type %s not serializable" % type(obj))
 
+####################
+# GET                           
+####################
+
 @app.route('/')
 def homepage():
     return """
@@ -46,59 +50,126 @@ def homepage():
 
 @app.route('/players', methods=['GET'])
 def getPlayers():
-    players = Player.query.all()
+    players = Players.query.all()
     return json.dumps([player.as_dict() for player in players], default=jsonSerial)
 
+@app.route('/players/<int:id>', methods=['GET'])
+def getPlayerById(id):
+    player = Players.query.get_or_404(id)
+    return json.dumps(player.as_dict(), default=jsonSerial)
+
+@app.route('/players/<username>', methods=['GET'])
+def getPlayerByUsername(username):
+    player = Players.query.filter_by(Username=username).first_or_404()
+    return json.dumps(player.as_dict(), default=jsonSerial)
+
+@app.route('/games', methods=['GET'])
+def getGames():
+    games = Games.query.all()
+    return json.dumps([game.as_dict() for game in games], default=jsonSerial)
+
+@app.route('/games/<int:id>', methods=['GET'])
+def getGameById(id):
+    game = Games.query.get_or_404(id)
+    return json.dumps(player.as_dict(), default=jsonSerial)
+
+@app.route('/series', methods=['GET'])
+def getSeries():
+    series = Series.query.all()
+    return json.dumps([match.as_dict() for match in series], default=jsonSerial)
+
+@app.route('/history', methods=['GET'])
+def getHistory():
+    history = History.query.all()
+    return json.dumps([entry.as_dict() for entry in history], default=jsonSerial)
+
+####################
+# POST 
+####################
+
 @app.route('/players', methods=['POST'])
-def addPlayer():
+def createPlayer():
     if not request.json:
         abort(400)
     for attribute in ['FirstName', 'LastName', 'Username', 'Email']: 
         if attribute not in request.json:
             abort(400)
-    newPlayer = Player(request.json['FirstName'], 
-                       request.json['LastName'], 
-                       request.json['Username'], 
-                       request.json['Email'])
+    newPlayer = Players(request.json['FirstName'], 
+                        request.json['LastName'], 
+                        request.json['Username'], 
+                        request.json['Email'])
     db.session.add(newPlayer)
     db.session.commit()
     return (json.dumps(newPlayer.as_dict(), default=jsonSerial), 201)
 
-@app.route('/players/<id>', methods=['GET'])
-def getPlayerById(id):
-    player = Player.query.get_or_404(id)
-    return json.dumps(player.as_dict(), default=jsonSerial)
-
-@app.route('/players/<username>', methods=['GET'])
-def getPlayerByUsername(username):
-    player = Player.query.filter_by(Username=username).first_or_404()
-    return json.dumps(player.as_dict(), default=jsonSerial)
-
-@app.route('/games', methods=['GET'])
-def getGames():
-    games = Game.query.all()
-    return json.dumps([game.as_dict() for game in games], default=jsonSerial)
-
 @app.route('/games', methods=['POST'])
-def addGame():
+def createGame():
     if not request.json:
         abort(400)
     for attribute in ['Single', 'LeftScore', 'RightScore', 'WinMargin', 'Winner']: # add EndTime later
         if attribute not in request.json:
             abort(400)
-    newGame = Game(request.json['Single'],
-                   request.json['LeftScore'],
-                   request.json['RightScore'],
-                   request.json['WinMargin'],
-                   request.json['Winner'])
+    newGame = Games(request.json['Single'],
+                    request.json['LeftScore'],
+                    request.json['RightScore'],
+                    request.json['WinMargin'],
+                    request.json['Winner'])
     db.session.add(newGame)
     db.session.commit()
     return (json.dumps(newGame.as_dict(), default=jsonSerial), 201)
 
-@app.route('/games/<id>')
-def getGameById(id):
-    game = Game.query.get_or_404(id)
-    return json.dumps(player.as_dict(), default=jsonSerial)
+@app.route('/series', methods=['POST'])
+def createSeries():
+    if not request.json:
+        abort(400)
+    for attribute in ['NumGames', 'LeftWins', 'RightWins']: # might not be necessary
+        if attribute not in request.json:
+            abort(400)
+    newSeries = Series(request.json['NumGames'],
+                       request.json['LeftWins'],
+                       request.json['RightWins'])
+    db.session.add(newSeries)
+    db.session.commit()
+    return (json.dumps(newSeries.as_dict(), default=jsonSerial), 201)
+
+@app.route('/history', methods=['POST'])
+def createHistory():
+    if not request.json:
+        abort(400)
+    for attribute in ['GameId', 'PlayerId', 'Side', 'SeriesId']:
+        if attribute not in request.json:
+            abort(400)
+    newHistory = History(request.json['GameId'],
+                         request.json['PlayerId'],
+                         request.json['Side'],
+                         request.json['SeriesId'])
+    db.session.add(newHistory)
+    db.session.commit()
+    return (json.dumps(newHistory.as_dict(), default=jsonSerial), 201)
+
+####################
+# DELETE 
+####################
+
+@app.route('/players/<int:id>', methods=['DELETE'])
+def removePlayerById(id):
+    db.session.delete(Players.query.get(id))
+    db.session.commit()
+    return jsonify({ 'result': True }) 
+
+@app.route('/games/<int:id>', methods=['DELETE'])
+def removeGameById(id):
+    db.session.delete(Games.query.get(id))
+    db.session.commit()
+    return jsonify({ 'result': True })
+
+@app.route('/series/<int:id>', methods=['DELETE'])
+def removeSeriesById(id):
+    db.session.delete(Series.query.get(id))
+    db.session.commit()
+    return jsonify({ 'result': True })
+
+# TODO: figure out how to access history by primary key and delete row
 
 if __name__ == '__main__':
     app.run()

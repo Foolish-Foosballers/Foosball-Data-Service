@@ -7,7 +7,7 @@ class TableSide(enum.Enum):
     LEFT = "Left"
     RIGHT = "Right"
 
-class Player(db.Model):
+class Players(db.Model):
     Id = db.Column(db.Integer, primary_key=True, nullable=False)
     FirstName = db.Column(db.String(120), nullable=False)
     LastName = db.Column(db.String(120), nullable=False)
@@ -38,7 +38,7 @@ class Player(db.Model):
         """Method for converting model to a dictionary for JSON serializable output"""
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
-class Game(db.Model):
+class Games(db.Model):
     Id = db.Column(db.Integer, primary_key=True, nullable=False)
     EndTime = db.Column(db.DateTime, nullable=False, default=datetime.utcnow) 
     Single = db.Column(db.Boolean, nullable=False)
@@ -47,7 +47,7 @@ class Game(db.Model):
     WinMargin = db.Column(db.Integer, nullable=False)
     Winner = db.Column(db.Enum(TableSide), nullable=False)
 
-    def __init__(self, endTime, single, leftScore, rightScore, winMargin, winner):
+    def __init__(self, single, leftScore, rightScore, winMargin, winner):
         self.EndTime = datetime.now() # JUST FOR TESTING PURPOSES
         self.Single = single
         self.LeftScore = leftScore
@@ -64,6 +64,11 @@ class Series(db.Model):
     NumGames = db.Column(db.Integer, nullable=False)
     LeftWins = db.Column(db.Integer, nullable=False)
     RightWins = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, numGames, leftWins, rightWins):
+        self.NumGames = numGames
+        self.LeftWins = leftWins
+        self.RightWins = rightWins
 
     def as_dict(self):
         """Method for converting model to a dictionary for JSON serializable output"""
