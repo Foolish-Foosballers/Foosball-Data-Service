@@ -144,13 +144,13 @@ def createSeries():
 def createHistory():
     if not request.json:
         abort(400)
-    for attribute in ['GameId', 'PlayerId', 'Side', 'SeriesId']:
+    for attribute in ['GameId', 'PlayerId', 'SeriesId', 'Side']:
         if attribute not in request.json:
             abort(400)
     newHistory = History(request.json['GameId'],
                          request.json['PlayerId'],
-                         TableSide.LEFT if request.json['Side'] == 'Left' else TableSide.RIGHT,
-                         request.json['SeriesId'])
+                         request.json['SeriesId'],
+                         TableSide.LEFT if request.json['Side'] == 'Left' else TableSide.RIGHT)
     db.session.add(newHistory)
     db.session.commit()
     return (json.dumps(newHistory.as_dict(), default=jsonSerial), 201)
