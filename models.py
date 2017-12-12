@@ -47,6 +47,14 @@ class Game(db.Model):
     WinMargin = db.Column(db.Integer, nullable=False)
     Winner = db.Column(db.Enum(TableSide), nullable=False)
 
+    def __init__(self, endTime, single, leftScore, rightScore, winMargin, winner):
+        self.EndTime = datetime.now() # JUST FOR TESTING PURPOSES
+        self.Single = single
+        self.LeftScore = leftScore
+        self.RightScore = rightScore
+        self.WinMargin = winMargin
+        self.Winner = winner
+
     def as_dict(self):
         """Method for converting model to a dictionary for JSON serializable output"""
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}

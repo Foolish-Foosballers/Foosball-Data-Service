@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, abort, request
+from flask import Flask, abort, request
 from datetime import date, datetime
 from flask_sqlalchemy import SQLAlchemy
 import os, json, logging
@@ -44,49 +44,59 @@ def homepage():
     </ul>
     """
 
-@app.route('/players')
-def playersWithJsonify():
-    return jsonify({'players': Player.query.all()})
-
-@app.route('/players/<id>')
-def playersById(id):
-    player = Player.query.get_or_404(id)
-    return json.dumps(player.as_dict(), default=jsonSerial)
-
-@app.route('/players/<id>/jsonify')
-def playersByIdJsonify(id):
-    return jsonify({'player': Player.query.get(id)})
+@app.route('/players', methods=['GET'])
+def getPlayers():
+    players = Player.query.all()
+    return json.dumps([player.as_dict() for player in players], default=jsonSerial)
 
 @app.route('/players', methods=['POST'])
 def addPlayer():
     if not request.json:
-        print "no json", request
         abort(400)
     for attribute in ['FirstName', 'LastName', 'Username', 'Email']: 
         if attribute not in request.json:
-            print "no attribute", attribute
             abort(400)
-    newPlayer = Player(request.json['FirstName'], request.json['LastName'], request.json['Username'], request.json['Email'])
+    newPlayer = Player(request.json['FirstName'], 
+                       request.json['LastName'], 
+                       request.json['Username'], 
+                       request.json['Email'])
     db.session.add(newPlayer)
     db.session.commit()
-    return (jsonify({'player': player}), 201)
+    return (json.dumps(newPlayer.as_dict(), default=jsonSerial), 201)
 
-@app.route('/players/<username>')
-def playersByUsername(username):
+@app.route('/players/<id>', methods=['GET'])
+def getPlayerById(id):
+    player = Player.query.get_or_404(id)
+    return json.dumps(player.as_dict(), default=jsonSerial)
+
+@app.route('/players/<username>', methods=['GET'])
+def getPlayerByUsername(username):
     player = Player.query.filter_by(Username=username).first_or_404()
     return json.dumps(player.as_dict(), default=jsonSerial)
 
-@app.route('/players/<username>/jsonify')
-def playersByUsernameJsonify(username):
-    return jsonify({'player': Player.query.first(username)})
-
-@app.route('/games')
-def games():
+@app.route('/games', methods=['GET'])
+def getGames():
     games = Game.query.all()
     return json.dumps([game.as_dict() for game in games], default=jsonSerial)
 
+@app.route('/games', methods=['POST'])
+def addGame():
+    if not request.json:
+        abort(400)
+    for attribute in ['Single', 'LeftScore', 'RightScore', 'WinMargin', 'Winner']: # add EndTime later
+        if attribute not in request.json:
+            abort(400)
+    newGame = Game(request.json['Single'],
+                   request.json['LeftScore'],
+                   request.json['RightScore'],
+                   request.json['WinMargin'],
+                   request.json['Winner'])
+    db.session.add(newGame)
+    db.session.commit()
+    return (json.dumps(newGame.as_dict(), default=jsonSerial), 201)
+
 @app.route('/games/<id>')
-def gamesById(id):
+def getGameById(id):
     game = Game.query.get_or_404(id)
     return json.dumps(player.as_dict(), default=jsonSerial)
 
