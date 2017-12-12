@@ -42,7 +42,7 @@ def homepage():
     createTables()
     return """
     <h1>Welcome to the Foosball Data Service.</h1>
-    <p>Here is a list of available routes:</p>
+    <p>Here is a list of available routes for reading data:</p>
     <ul>
         <li><a href="/">/</a></li>
         <li><a href="/players">/players</a></li>
@@ -50,6 +50,8 @@ def homepage():
         <li><a>/players/&ltusername&gt</a></li>
         <li><a href="/games">/games</a></li>
         <li><a>/games/&ltid&gt</a></li>
+        <li><a href="/series">/series</a></li>
+        <li><a href="/history">/history></a></li>
     </ul>
     """
 
