@@ -110,11 +110,14 @@ def createGame():
     for attribute in ['Single', 'LeftScore', 'RightScore', 'WinMargin', 'Winner']: # add EndTime later
         if attribute not in request.json:
             abort(400)
+    if request.json['Winner'] not in ('Left', 'Right'):
+        abort(400)
+    
     newGame = Games(request.json['Single'],
                     request.json['LeftScore'],
                     request.json['RightScore'],
                     request.json['WinMargin'],
-                    request.json['Winner'])
+                    TableSide.LEFT if request.json['Winner'] == "Left" else TableSide.Right)
     db.session.add(newGame)
     db.session.commit()
     return (json.dumps(newGame.as_dict(), default=jsonSerial), 201)
@@ -142,7 +145,7 @@ def createHistory():
             abort(400)
     newHistory = History(request.json['GameId'],
                          request.json['PlayerId'],
-                         request.json['Side'],
+                         TableSide.LEFT if request.json['Side'] == "Left" else TableSide.Right,
                          request.json['SeriesId'])
     db.session.add(newHistory)
     db.session.commit()
