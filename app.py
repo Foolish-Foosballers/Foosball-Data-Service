@@ -1,4 +1,4 @@
-from flask import Flask, abort, request
+from flask import Flask, abort, request, jsonify
 from datetime import date, datetime
 from flask_sqlalchemy import SQLAlchemy
 import os, json, logging
