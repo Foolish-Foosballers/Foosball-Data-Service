@@ -75,10 +75,16 @@ class Series(db.Model):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 class History(db.Model):
-    GameId = db.Column(db.Integer, db.ForeignKey('game.Id'), primary_key=True, nullable=False)
-    PlayerId = db.Column(db.Integer, db.ForeignKey('player.Id'), primary_key=True, nullable=False)
+    GameId = db.Column(db.Integer, db.ForeignKey('games.Id'), primary_key=True, nullable=False)
+    PlayerId = db.Column(db.Integer, db.ForeignKey('players.Id'), primary_key=True, nullable=False)
     SeriesId = db.Column(db.Integer, db.ForeignKey('series.Id'), nullable=False)
     Side = db.Column(db.Enum(TableSide), nullable=False)
+
+    def __init__(self, gameId, playerId, seriesId, side):
+        self.GameId = gameId
+        self.PlayerId = playerId
+        self.SeriesId = seriesId
+        self.Side = side
 
     def as_dict(self):
         """Method for converting model to a dictionary for JSON serializable output"""
