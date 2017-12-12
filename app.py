@@ -27,6 +27,10 @@ def jsonSerial(obj):
 
     if isinstance(obj, (datetime, date)):
         return obj.isoformat()
+
+    if isinstance(obj, enum.Enum):
+        return obj.value
+    
     raise TypeError ("Type %s not serializable" % type(obj))
 
 ####################
