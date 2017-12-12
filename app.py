@@ -30,7 +30,7 @@ def jsonSerial(obj):
 
     if isinstance(obj, enum.Enum):
         return obj.value
-    
+
     raise TypeError ("Type %s not serializable" % type(obj))
 
 ####################
@@ -121,7 +121,7 @@ def createGame():
                     request.json['LeftScore'],
                     request.json['RightScore'],
                     request.json['WinMargin'],
-                    TableSide.LEFT if request.json['Winner'] == "Left" else TableSide.Right)
+                    TableSide.LEFT if request.json['Winner'] == 'Left' else TableSide.RIGHT)
     db.session.add(newGame)
     db.session.commit()
     return (json.dumps(newGame.as_dict(), default=jsonSerial), 201)
@@ -149,7 +149,7 @@ def createHistory():
             abort(400)
     newHistory = History(request.json['GameId'],
                          request.json['PlayerId'],
-                         TableSide.LEFT if request.json['Side'] == "Left" else TableSide.Right,
+                         TableSide.LEFT if request.json['Side'] == 'Left' else TableSide.RIGHT,
                          request.json['SeriesId'])
     db.session.add(newHistory)
     db.session.commit()
