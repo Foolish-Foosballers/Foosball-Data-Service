@@ -95,8 +95,32 @@ def updateRankings():
     games = Games.query.all()
     app.logger.debug(json.dumps([game.as_dict() for game in games], default=jsonSerial))
     for game in games:
+        gameTups = []
         gameHistory = History.query.filter_by(GameId = game.Id)
-        app.logger.debug(json.dumps([game.as_dict() for game in gameHistory], default=jsonSerial))
+        # app.logger.debug(json.dumps([game.as_dict() for game in gameHistory], default=jsonSerial))
+        gameHists = [game.as_dict() for game in gameHistory]
+        if len(gameHists) == 2:
+            commonGames = []
+            player1 = Player.query.filter_by(Id = gameHists[0].PlayerId)
+            player2 = Player.query.filter_by(Id = gameHists[1].PlayerId)
+            play1Games = History.query.filter_by(PlayerId = player1.Id)
+            play1Games = [game.as_dict() for game in play1Games]
+            play2Games = History.query.filter_by(PlayerId = player2.Id)
+            play2Games = [game.as_dict() for game in play2Games]
+            play2GamesById = {}
+            for game in play2Games:
+                _id = game["GameId"]
+                play2GamesById[_id] = game
+            for game in play1Games:
+                _id = game["GameId"]
+                if _id in play2GamesById:
+                    commonGames.append(game)
+            # create two entries mapping (player1, player2, numTimesPlayed, player1Wins, player1Loss)
+            p1Entry = (player1.Id, player2.Id, len(commonGames), player1.GameWins, player1.TotalGamesPlayed - player1.GameWins)
+            p2Entry = (player2.Id, player1.Id, len(commonGames), player2.GameWins, player2.TotalGamesPlayed - player2.GameWins)
+            gameTups.append(p1Entry)
+            gameTups.append(p2Entry)
+        app.logger.debug(gameTups)
     return json.dumps([game.as_dict() for game in games], default=jsonSerial)
 
 """
