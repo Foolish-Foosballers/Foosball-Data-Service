@@ -102,7 +102,7 @@ def updateRankings():
         if len(gameHists) == 2:
             commonGames = []
             
-            player1 = Players.query.filter_by(Id = gameHists[0]["PlayerId"])
+            player1 = Players.query.one(Id = gameHists[0]["PlayerId"])
             player2 = Players.query.filter_by(Id = gameHists[1]["PlayerId"])
             app.logger.debug(player1)
             play1Games = History.query.filter_by(PlayerId = player1[0]["Id"])
