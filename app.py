@@ -124,9 +124,9 @@ def updateRankings():
                 gameTups.append(p1Entry)
                 gameTups.append(p2Entry)
                 matchupsSeen.add((player1.Id, player2.Id))
-                matchupsSeen.add(player2.Id, player1.Id))
+                matchupsSeen.add((player2.Id, player1.Id))
         app.logger.debug(gameTups)
-        
+
         app.logger.debug(matchupsSeen)
     return json.dumps([game.as_dict() for game in games], default=jsonSerial)
 
