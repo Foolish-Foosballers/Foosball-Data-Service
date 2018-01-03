@@ -93,6 +93,7 @@ def getHistory():
 @app.route('/updateRankings', methods=['GET'])
 def updateRankings():
     games = Games.query.all()
+    matchupsSeen = set()
     app.logger.debug(json.dumps([game.as_dict() for game in games], default=jsonSerial))
     for game in games:
         gameTups = []
@@ -104,27 +105,35 @@ def updateRankings():
             player1 = Players.query.filter_by(Id = gameHists[0]["PlayerId"]).first()
             player2 = Players.query.filter_by(Id = gameHists[1]["PlayerId"]).first()
             app.logger.debug(player1.Id)
-            play1Games = History.query.filter_by(PlayerId = player1.Id)
-            play1Games = [game.as_dict() for game in play1Games]
-            play2Games = History.query.filter_by(PlayerId = player2.Id)
-            play2Games = [game.as_dict() for game in play2Games]
-            play2GamesById = {}
-            for game in play2Games:
-                _id = game["GameId"]
-                play2GamesById[_id] = game
-            for game in play1Games:
-                _id = game["GameId"]
-                if _id in play2GamesById:
-                    commonGames.append(game)
-            # create two entries mapping (player1, player2, numTimesPlayed, player1Wins, player1Loss)
-            p1Entry = (player1.Id, player2.Id, len(commonGames), player1.GameWins, len(play1Games) - player1.GameWins)
-            p2Entry = (player2.Id, player1.Id, len(commonGames), player2.GameWins, len(play2Games) - player2.GameWins)
-            gameTups.append(p1Entry)
-            gameTups.append(p2Entry)
+            if (player1.Id, player2.Id) not in matchupsSeen:
+                play1Games = History.query.filter_by(PlayerId = player1.Id)
+                play1Games = [game.as_dict() for game in play1Games]
+                play2Games = History.query.filter_by(PlayerId = player2.Id)
+                play2Games = [game.as_dict() for game in play2Games]
+                play2GamesById = {}
+                for game in play2Games:
+                    _id = game["GameId"]
+                    play2GamesById[_id] = game
+                for game in play1Games:
+                    _id = game["GameId"]
+                    if _id in play2GamesById:
+                        commonGames.append(game)
+                # create two entries mapping (player1, player2, numTimesPlayed, player1Wins, player1Loss)
+                p1Entry = (player1.Id, player2.Id, len(commonGames), player1.GameWins, len(play1Games) - player1.GameWins)
+                p2Entry = (player2.Id, player1.Id, len(commonGames), player2.GameWins, len(play2Games) - player2.GameWins)
+                gameTups.append(p1Entry)
+                gameTups.append(p2Entry)
+                matchupsSeen.add((player1.Id, player2.Id))
+                matchupsSeen.add(player2.Id, player1.Id))
         app.logger.debug(gameTups)
+        app.logger.debug(matchupsSeen)
     return json.dumps([game.as_dict() for game in games], default=jsonSerial)
 
 """
+get all players
+for each player
+    get games from history table with that player id
+
 get games
 for each game in games:
     get two games from history table using gameId
