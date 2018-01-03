@@ -3,3 +3,4 @@ gunicorn
 logging
 psycopg2
 Flask-Sqlalchemy
+numpy
