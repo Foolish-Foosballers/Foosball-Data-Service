@@ -61,5 +61,3 @@ def updateRankings(allGames):
         player = players[i]
         rankings[player] = rankingsMatrix[i][0]
     return rankings
-
-print updateRankings(allGames)

@@ -108,9 +108,9 @@ with output, post to DB updated ranking for each player ID in players table
 def updateRankings():
     games = Games.query.all()
     matchupsSeen = set()
-
+    gameTups = []
     for game in games:
-        gameTups = []
+
         gameHistory = History.query.filter_by(GameId = game.Id)
         gameHists = [game.as_dict() for game in gameHistory]
         if (gameHists[0]["PlayerId"], gameHists[1]["PlayerId"]) not in matchupsSeen:
