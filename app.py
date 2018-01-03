@@ -101,8 +101,8 @@ def updateRankings():
         gameHists = [game.as_dict() for game in gameHistory]
         if len(gameHists) == 2:
             commonGames = []
-            player1 = Player.query.filter_by(Id = gameHists[0].PlayerId)
-            player2 = Player.query.filter_by(Id = gameHists[1].PlayerId)
+            player1 = Players.query.filter_by(Id = gameHists[0].PlayerId)
+            player2 = Players.query.filter_by(Id = gameHists[1].PlayerId)
             play1Games = History.query.filter_by(PlayerId = player1.Id)
             play1Games = [game.as_dict() for game in play1Games]
             play2Games = History.query.filter_by(PlayerId = player2.Id)
