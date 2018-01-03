@@ -93,10 +93,10 @@ def getHistory():
 @app.route('/updateRankings', methods=['GET'])
 def updateRankings():
     games = Games.query.all()
-    print games
+    app.logger.debug(games)
     for game in games:
         gameHistory = History.query.filter_by(GameId = game.Id)
-        print gameHistory, len(gameHistory)
+        app.logger.debug(gameHistory)
 
 """
 get games
