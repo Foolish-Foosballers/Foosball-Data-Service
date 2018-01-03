@@ -93,10 +93,11 @@ def getHistory():
 @app.route('/updateRankings', methods=['GET'])
 def updateRankings():
     games = Games.query.all()
-    app.logger.debug(games)
+    app.logger.debug(json.dumps([game.as_dict() for game in games], default=jsonSerial))
     for game in games:
         gameHistory = History.query.filter_by(GameId = game.Id)
-        app.logger.debug(gameHistory)
+        app.logger.debug(json.dumps([game.as_dict() for game in gameHistory], default=jsonSerial))
+    return json.dumps([game.as_dict() for game in games], default=jsonSerial)
 
 """
 get games
