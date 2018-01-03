@@ -97,12 +97,13 @@ def updateRankings():
     for game in games:
         gameTups = []
         gameHistory = History.query.filter_by(GameId = game.Id)
-        # app.logger.debug(json.dumps([game.as_dict() for game in gameHistory], default=jsonSerial))
+        app.logger.debug(json.dumps([game.as_dict() for game in gameHistory], default=jsonSerial))
         gameHists = [game.as_dict() for game in gameHistory]
         if len(gameHists) == 2:
             commonGames = []
-            player1 = Players.query.filter_by(Id = gameHists[0].PlayerId)
-            player2 = Players.query.filter_by(Id = gameHists[1].PlayerId)
+            app.logger.debug(gameHists[0])
+            player1 = Players.query.filter_by(Id = gameHists[0]["PlayerId"])
+            player2 = Players.query.filter_by(Id = gameHists[1]["PlayerId"])
             play1Games = History.query.filter_by(PlayerId = player1.Id)
             play1Games = [game.as_dict() for game in play1Games]
             play2Games = History.query.filter_by(PlayerId = player2.Id)
