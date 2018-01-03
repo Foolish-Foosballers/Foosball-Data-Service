@@ -2,6 +2,7 @@ from flask import Flask, abort, request, jsonify
 from datetime import date, datetime
 from flask_sqlalchemy import SQLAlchemy
 import os, json, logging
+import playerRankings as rank
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
@@ -90,22 +91,33 @@ def getHistory():
     history = History.query.all()
     return json.dumps([entry.as_dict() for entry in history], default=jsonSerial)
 
+"""
+get games
+for each game in games:
+    get two games from history table using gameId
+    for each of those games, get player records from player table using player ids
+    for each of the player ids, get games for that player
+    get intersection of game ids for two lists of games
+    take length of intersection to find num times each player has played each other
+    create two entries mapping (player1, player2, numTimesPlayed, player1Wins, player1Loss)
+    store entries in a list
+with all entries, run through playerRankings algorithm
+with output, post to DB updated ranking for each player ID in players table
+"""
 @app.route('/updateRankings', methods=['GET'])
 def updateRankings():
     games = Games.query.all()
     matchupsSeen = set()
-    app.logger.debug(json.dumps([game.as_dict() for game in games], default=jsonSerial))
+
     for game in games:
         gameTups = []
         gameHistory = History.query.filter_by(GameId = game.Id)
-        app.logger.debug(json.dumps([game.as_dict() for game in gameHistory], default=jsonSerial))
         gameHists = [game.as_dict() for game in gameHistory]
         if (gameHists[0]["PlayerId"], gameHists[1]["PlayerId"]) not in matchupsSeen:
             if len(gameHists) == 2:
                 commonGames = []
                 player1 = Players.query.filter_by(Id = gameHists[0]["PlayerId"]).first()
                 player2 = Players.query.filter_by(Id = gameHists[1]["PlayerId"]).first()
-                app.logger.debug(player1.Id)
                 play1Games = History.query.filter_by(PlayerId = player1.Id)
                 play1Games = [game.as_dict() for game in play1Games]
                 play2Games = History.query.filter_by(PlayerId = player2.Id)
@@ -126,27 +138,9 @@ def updateRankings():
                 matchupsSeen.add((player1.Id, player2.Id))
                 matchupsSeen.add((player2.Id, player1.Id))
         app.logger.debug(gameTups)
-
-        app.logger.debug(matchupsSeen)
+    app.logger.debug(rank.updateRankings(gameTups))
     return json.dumps([game.as_dict() for game in games], default=jsonSerial)
 
-"""
-get all players
-for each player
-    get games from history table with that player id
-
-get games
-for each game in games:
-    get two games from history table using gameId
-    for each of those games, get player records from player table using player ids
-    for each of the player ids, get games for that player
-    get intersection of game ids for two lists of games
-    take length of intersection to find num times each player has played each other
-    create two entries mapping (player1, player2, numTimesPlayed, player1Wins, player1Loss)
-    store entries in a list
-with all entries, run through playerRankings algorithm
-with output, post to DB updated ranking for each player ID in players table
-"""
 
 ####################
 # POST 
