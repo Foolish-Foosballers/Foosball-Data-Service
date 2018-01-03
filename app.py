@@ -100,12 +100,12 @@ def updateRankings():
         gameHistory = History.query.filter_by(GameId = game.Id)
         app.logger.debug(json.dumps([game.as_dict() for game in gameHistory], default=jsonSerial))
         gameHists = [game.as_dict() for game in gameHistory]
-        if len(gameHists) == 2:
-            commonGames = []
-            player1 = Players.query.filter_by(Id = gameHists[0]["PlayerId"]).first()
-            player2 = Players.query.filter_by(Id = gameHists[1]["PlayerId"]).first()
-            app.logger.debug(player1.Id)
-            if (player1.Id, player2.Id) not in matchupsSeen:
+        if (gameHists[0]["PlayerId"], gameHists[1]["PlayerId"]) not in matchupsSeen:
+            if len(gameHists) == 2:
+                commonGames = []
+                player1 = Players.query.filter_by(Id = gameHists[0]["PlayerId"]).first()
+                player2 = Players.query.filter_by(Id = gameHists[1]["PlayerId"]).first()
+                app.logger.debug(player1.Id)
                 play1Games = History.query.filter_by(PlayerId = player1.Id)
                 play1Games = [game.as_dict() for game in play1Games]
                 play2Games = History.query.filter_by(PlayerId = player2.Id)
