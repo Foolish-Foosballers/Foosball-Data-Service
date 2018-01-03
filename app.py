@@ -101,12 +101,13 @@ def updateRankings():
         gameHists = [game.as_dict() for game in gameHistory]
         if len(gameHists) == 2:
             commonGames = []
-            app.logger.debug(gameHists[0])
+            
             player1 = Players.query.filter_by(Id = gameHists[0]["PlayerId"])
             player2 = Players.query.filter_by(Id = gameHists[1]["PlayerId"])
-            play1Games = History.query.filter_by(PlayerId = player1.Id)
+            app.logger.debug(player1)
+            play1Games = History.query.filter_by(PlayerId = player1[0]["Id"])
             play1Games = [game.as_dict() for game in play1Games]
-            play2Games = History.query.filter_by(PlayerId = player2.Id)
+            play2Games = History.query.filter_by(PlayerId = player2[0]["Id"])
             play2Games = [game.as_dict() for game in play2Games]
             play2GamesById = {}
             for game in play2Games:
