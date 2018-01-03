@@ -90,6 +90,28 @@ def getHistory():
     history = History.query.all()
     return json.dumps([entry.as_dict() for entry in history], default=jsonSerial)
 
+@app.route('/updateRankings', methods=['GET'])
+def updateRankings():
+    games = Games.query.all()
+    print games
+    for game in games:
+        gameHistory = History.query.filter_by(GameId = game.Id)
+        print gameHistory, len(gameHistory)
+
+"""
+get games
+for each game in games:
+    get two games from history table using gameId
+    for each of those games, get player records from player table using player ids
+    for each of the player ids, get games for that player
+    get intersection of game ids for two lists of games
+    take length of intersection to find num times each player has played each other
+    create two entries mapping (player1, player2, numTimesPlayed, player1Wins, player1Loss)
+    store entries in a list
+with all entries, run through playerRankings algorithm
+with output, post to DB updated ranking for each player ID in players table
+"""
+
 ####################
 # POST 
 ####################
