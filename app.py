@@ -216,7 +216,7 @@ def updatePlayer(id):
     app.logger.debug(request.json)
     if not request.json:
         abort(400)
-    session.query(Players).filter(Id = id).update(request.json)
+    db.session.query(Players).filter(Id = id).update(request.json)
     db.session.commit()
     return (json.dumps(player.as_dict(), default=jsonSerial), 201)
 
