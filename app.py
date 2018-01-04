@@ -139,11 +139,15 @@ def updateRankings():
     rankings = rank.updateRankings(gameTups)
     sortedRanks = sorted([(value,key) for (key,value) in rankings.items()], reverse=True)
     allPlayers = Players.query.all()
+    allPlayersDict = {}
+    for player in allPlayers: 
+        allPlayersDict[player.Id] = player
     for i in range(len(sortedRanks)):
         _id = sortedRanks[i][1]
-        player = allPlayers.get(_id)
+        player = allPlayersDict[_id]
         app.logger.debug(player)
-        player.Ranking = i    
+        player.Ranking = i   
+        app.logger.debug(player) 
     db.session.commit()
     return json.dumps([game.as_dict() for game in games], default=jsonSerial)
 
