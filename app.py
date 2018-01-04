@@ -93,7 +93,7 @@ def getHistory():
 
 @app.route('/rankings', methods=['GET'])
 def getRankings():
-    sortedPlayers = Players.query.order_by(Players.Ranking).filter_by(Players.Ranking != 0).all()
+    sortedPlayers = Players.query.filter(Players.Ranking != 0).order_by(Players.Ranking).all()
     return json.dumps([player.as_dict() for player in sortedPlayers], default=jsonSerial)
 ####################
 # POST 
