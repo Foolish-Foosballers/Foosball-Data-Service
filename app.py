@@ -145,12 +145,11 @@ def updateRankings():
     for i in range(len(sortedRanks)):
         _id = sortedRanks[i][1]
         player = allPlayersDict[_id]
-        app.logger.debug(player)
-        player.Ranking = i   
-        app.logger.debug(player) 
+        app.logger.debug(player.ranking)
+        player.Ranking = i + 1   
+        app.logger.debug(player.ranking) 
     db.session.commit()
     return json.dumps([game.as_dict() for game in games], default=jsonSerial)
-
 
 ####################
 # POST 
