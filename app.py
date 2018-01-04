@@ -110,7 +110,6 @@ def updateRankings():
     matchupsSeen = set()
     gameTups = []
     for game in games:
-
         gameHistory = History.query.filter_by(GameId = game.Id)
         gameHists = [game.as_dict() for game in gameHistory]
         if (gameHists[0]["PlayerId"], gameHists[1]["PlayerId"]) not in matchupsSeen:
@@ -208,6 +207,21 @@ def createHistory():
     db.session.add(newHistory)
     db.session.commit()
     return (json.dumps(newHistory.as_dict(), default=jsonSerial), 201)
+
+####################
+# PUT
+####################
+@app.route('/players/<int:id>', methods=["PUT"])
+def updatePlayer(id):
+    player = Players.query.get_or_404(id)
+    if not request.json:
+        abort(400)
+    for key in request.json:
+        player[key] = request.json[key]
+    db.session.commit()
+    return (json.dumps(player.as_dict(), default=jsonSerial), 201)
+
+    
 
 ####################
 # DELETE 
