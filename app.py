@@ -217,7 +217,7 @@ def updateRankings():
         player = allPlayersDict[_id]
         player.Ranking = i + 1    
     db.session.commit()
-    return ({"updated rankings": "success"}, 204)
+    return (json.dumps([player.as_dict() for player in allPlayers], default=jsonSerial), 202)
 
 ####################
 # DELETE 
