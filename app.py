@@ -91,19 +91,7 @@ def getHistory():
     history = History.query.all()
     return json.dumps([entry.as_dict() for entry in history], default=jsonSerial)
 
-"""
-get games
-for each game in games:
-    get two games from history table using gameId
-    for each of those games, get player records from player table using player ids
-    for each of the player ids, get games for that player
-    get intersection of game ids for two lists of games
-    take length of intersection to find num times each player has played each other
-    create two entries mapping (player1, player2, numTimesPlayed, player1Wins, player1Loss)
-    store entries in a list
-with all entries, run through playerRankings algorithm
-with output, post to DB updated ranking for each player ID in players table
-"""
+
 @app.route('/updateRankings', methods=['GET'])
 def updateRankings():
     games = Games.query.all()
@@ -112,6 +100,8 @@ def updateRankings():
     for game in games:
         gameHistory = History.query.filter_by(GameId = game.Id)
         gameHists = [game.as_dict() for game in gameHistory]
+
+        # If pair of players has not been seen, find num of games each pair has played with each other
         if (gameHists[0]["PlayerId"], gameHists[1]["PlayerId"]) not in matchupsSeen:
             if len(gameHists) == 2:
                 commonGames = []
@@ -129,6 +119,7 @@ def updateRankings():
                     _id = game["GameId"]
                     if _id in play2GamesById:
                         commonGames.append(game)
+
                 # create two entries mapping (player1, player2, numTimesPlayed, player1Wins, player1Loss)
                 p1Entry = (player1.Id, player2.Id, len(commonGames), player1.GameWins, len(play1Games) - player1.GameWins)
                 p2Entry = (player2.Id, player1.Id, len(commonGames), player2.GameWins, len(play2Games) - player2.GameWins)
@@ -136,6 +127,8 @@ def updateRankings():
                 gameTups.append(p2Entry)
                 matchupsSeen.add((player1.Id, player2.Id))
                 matchupsSeen.add((player2.Id, player1.Id))
+
+    # Get new rankings based on game data, sort ids based on ranking, and update player rankings
     rankings = rank.updateRankings(gameTups)
     sortedRanks = sorted([(value,key) for (key,value) in rankings.items()], reverse=True)
     allPlayers = Players.query.all()
@@ -145,9 +138,7 @@ def updateRankings():
     for i in range(len(sortedRanks)):
         _id = sortedRanks[i][1]
         player = allPlayersDict[_id]
-        app.logger.debug(player.Ranking)
-        player.Ranking = i + 1   
-        app.logger.debug(player.Ranking) 
+        player.Ranking = i + 1    
     db.session.commit()
     return json.dumps([game.as_dict() for game in games], default=jsonSerial)
 
