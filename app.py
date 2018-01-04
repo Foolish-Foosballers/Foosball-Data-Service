@@ -136,8 +136,11 @@ def updateRankings():
                 gameTups.append(p2Entry)
                 matchupsSeen.add((player1.Id, player2.Id))
                 matchupsSeen.add((player2.Id, player1.Id))
-        app.logger.debug(gameTups)
-    app.logger.debug(rank.updateRankings(gameTups))
+    rankings = rank.updateRankings(gameTups)
+    player1.Ranking = rankings[player1.Id]
+    player2.Ranking = rankings[player2.Id]
+    app.logger.debug(rankings)
+    db.session.commit()
     return json.dumps([game.as_dict() for game in games], default=jsonSerial)
 
 
