@@ -220,7 +220,7 @@ def updatePlayer(id):
         abort(400)
     db.session.query(Players).filter_by(Id = id).update(request.json)
     db.session.commit()
-    return (request.json, default=jsonSerial), 201)
+    return (request.json, 201)
 
 ####################
 # DELETE 
