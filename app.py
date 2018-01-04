@@ -213,12 +213,11 @@ def createHistory():
 ####################
 @app.route('/players/<int:id>', methods=["PUT"])
 def updatePlayer(id):
-    app.logger.debug(request.json)
     if not request.json:
         abort(400)
     db.session.query(Players).filter_by(Id = id).update(request.json)
     db.session.commit()
-    return (json.dumps({"done": "hello"}, default=jsonSerial), 201)
+    return (request.json, default=jsonSerial), 201)
 
 ####################
 # DELETE 
