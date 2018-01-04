@@ -218,7 +218,7 @@ def updatePlayer(id):
         abort(400)
     db.session.query(Players).filter(Id = id).update(request.json)
     db.session.commit()
-    return (json.dumps(player.as_dict(), default=jsonSerial), 201)
+    return (json.dumps({"done": "hello"}, default=jsonSerial), 201)
 
 ####################
 # DELETE 
