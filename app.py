@@ -51,7 +51,7 @@ def homepage():
         <li><a href="/games">/games</a></li>
         <li><a>/games/&ltid&gt</a></li>
         <li><a href="/series">/series</a></li>
-        <li><a href="/history">/history></a></li>
+        <li><a href="/history">/history</a></li>
     </ul>
     """
 
@@ -119,7 +119,8 @@ def createGame():
     if request.json['Winner'] not in ('Left', 'Right'):
         abort(400)
     
-    newGame = Games(request.json['Single'],
+    newGame = Games(request.json['Duration'],
+                    request.json['Single'],
                     request.json['LeftScore'],
                     request.json['RightScore'],
                     request.json['WinMargin'],
