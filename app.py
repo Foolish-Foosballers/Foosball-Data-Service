@@ -182,7 +182,8 @@ def updatePlayer(id):
         abort(400)
     db.session.query(Players).filter_by(Id = id).update(request.json)
     db.session.commit()
-    return (request.json, 202)
+    app.logger.debug(request.json)
+    return (jsonify(request.json), 202)
 
 @app.route('/updateRankings', methods=['PUT'])
 def updateRankings():
