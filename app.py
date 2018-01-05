@@ -96,14 +96,14 @@ def getHistory():
 def getRankings():
     sortedPlayers = Players.query.filter(Players.Ranking != 0).order_by(Players.Ranking).all()
     return json.dumps([player.as_dict() for player in sortedPlayers], default=jsonSerial)
-    serieswins: check
-    gamewins: check
-    totalpoints; check
-    shoutouts; check
-    Series win %: needs calc
-    game win %: gameWins/TotalGamesPlayed
-    point/game avg: totalpoints/TotalGamesPlayed
-    avg win margin: sum(winMargin) from games table/TotalGamesPlayed
+    # serieswins: check
+    # gamewins: check
+    # totalpoints; check
+    # shoutouts; check
+    # Series win %: needs calc
+    # game win %: gameWins/TotalGamesPlayed
+    # point/game avg: totalpoints/TotalGamesPlayed
+    # avg win margin: sum(winMargin) from games table/TotalGamesPlayed
 
 ####################
 # POST 
@@ -134,7 +134,8 @@ def createGame():
     if request.json['Winner'] not in ('Left', 'Right'):
         abort(400)
     
-    newGame = Games(request.json['Single'],
+    newGame = Games(request.json['Duration'],
+                    request.json['Single'],
                     request.json['LeftScore'],
                     request.json['RightScore'],
                     request.json['WinMargin'],

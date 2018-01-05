@@ -16,6 +16,7 @@ class Players(db.Model):
     SignupDate = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     TotalTimePlayed = db.Column(db.Integer, nullable=False, default=0)
     GameWins = db.Column(db.Integer, nullable=False, default=0)
+    TotalGamesPlayed = db.Column(db.Integer, nullable=False, default=0)
     SeriesWins = db.Column(db.Integer, nullable=False, default=0)
     TotalPoints = db.Column(db.Integer, nullable=False, default=0)
     Shutouts = db.Column(db.Integer, nullable=False, default=0)
@@ -29,6 +30,7 @@ class Players(db.Model):
         self.SignupDate = datetime.now()
         self.TotalTimePlayed = 0
         self.GameWins = 0
+        self.TotalGamesPlayed = 0
         self.SeriesWins = 0
         self.TotalPoints = 0
         self.Shutouts = 0
@@ -40,15 +42,17 @@ class Players(db.Model):
 
 class Games(db.Model):
     Id = db.Column(db.Integer, primary_key=True, nullable=False)
-    EndTime = db.Column(db.DateTime, nullable=False, default=datetime.utcnow) 
+    StartTime = db.Column(db.DateTime, nullable=False, default=datetime.utcnow) 
+    Duration = db.Column(db.Integer, nullable=False)
     Single = db.Column(db.Boolean, nullable=False)
     LeftScore = db.Column(db.Integer, nullable=False)
     RightScore = db.Column(db.Integer, nullable=False)
     WinMargin = db.Column(db.Integer, nullable=False)
     Winner = db.Column(db.Enum(TableSide), nullable=False)
 
-    def __init__(self, single, leftScore, rightScore, winMargin, winner):
-        self.EndTime = datetime.now() # JUST FOR TESTING PURPOSES
+    def __init__(self, duration, single, leftScore, rightScore, winMargin, winner):
+        self.StartTime = datetime.now() # JUST FOR TESTING PURPOSES
+        self.Duration = duration
         self.Single = single
         self.LeftScore = leftScore
         self.RightScore = rightScore
