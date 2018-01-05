@@ -111,15 +111,14 @@ def getLeaderboard():
         row["Points Scored"] = player.TotalPoints
         row["Shutouts"] = player.Shutouts 
         row["Game Win %"] = 1.0*player.GameWins / player.TotalGamesPlayed
+        numSeriesPlayed = db.session.query(func.count(Series.PlayerId)).join(History).filter(History.PlayerId == player.PlayerId).scalar()
+        app.logger.debug(numSeriesPlayed)
+        row["Series Win %"] = 1.0*player.SeriesWins / numSeriesPlayed
         row["Avg Points/Game"] = player.TotalPoints / player.TotalGamesPlayed
-        row["Avg Win Margin"] = 0
-        playerHist = db.session.query(func.sum(Games.WinMargin)).join(History).filter(Games.Winner == History.Side).filter(History.PlayerId == player.Id).scalar()
-        # playerHist = db.session.query(func.sum(WinMargin)).filter(History.PlayerId == player.Id).join(Games).filter(Games.Winner == History.Side)
-        app.logger.debug(playerHist)
-        app.logger.debug(float(playerHist))
-        app.logger.debug(type(playerHist))
-    
-    return {"done": "hi"}
+        sumWinMargin = db.session.query(func.sum(Games.WinMargin)).join(History).filter(Games.Winner == History.Side).filter(History.PlayerId == player.Id).scalar()
+        row["Avg Win Margin"] = sumWinMargin / player.TotalGamesPlayed 
+
+    return jsonify({"done": "hi"})
     # serieswins: check
     # gamewins: check
     # totalpoints; check
