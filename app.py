@@ -117,7 +117,7 @@ def getLeaderboard():
         # playerHist = db.session.query(func.sum(WinMargin)).filter(History.PlayerId == player.Id).join(Games).filter(Games.Winner == History.Side)
         for row in playerHist:
             app.logger.debug(row)
-        app.logger.debug((playerHist.first())
+        app.logger.debug((playerHist.first()))
         app.logger.debug(type(playerHist.first()))
     
     return {"done": "hi"}
