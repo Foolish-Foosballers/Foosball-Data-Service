@@ -1,6 +1,7 @@
 from flask import Flask, abort, request, jsonify
 from datetime import date, datetime
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 import os, json, logging
 import playerRankings as rank
 
