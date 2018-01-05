@@ -115,10 +115,9 @@ def getLeaderboard():
         row["Avg Win Margin"] = 0
         playerHist = db.session.query(func.sum(Games.WinMargin)).join(History).filter(Games.Winner == History.Side).filter(History.PlayerId == player.Id).scalar()
         # playerHist = db.session.query(func.sum(WinMargin)).filter(History.PlayerId == player.Id).join(Games).filter(Games.Winner == History.Side)
-        for row in playerHist:
-            app.logger.debug(row)
-        app.logger.debug((playerHist.first()))
-        app.logger.debug(type(playerHist.first()))
+        app.logger.debug(playerHist)
+        app.logger.debug(float(playerHist))
+        app.logger.debug(type(playerHist))
     
     return {"done": "hi"}
     # serieswins: check
