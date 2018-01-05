@@ -112,7 +112,7 @@ def getLeaderboard():
         row["Game Win %"] = 1.0*player.GameWins / player.TotalGamesPlayed
         row["Avg Points/Game"] = player.TotalPoints / player.TotalGamesPlayed
         row["Avg Win Margin"] = 0
-        playerHist = History.query.filter(PlayerId = player.Id).all()
+        playerHist = History.query.filter(History.PlayerId == player.Id).all()
         app.logger.debug(playerHist)
         app.logger.debug(playerHist.query.first())
         # playerId to get all games from history table with that playerId
