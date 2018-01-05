@@ -112,9 +112,9 @@ def getLeaderboard():
         row["Game Win %"] = 1.0*player.GameWins / player.TotalGamesPlayed
         row["Avg Points/Game"] = player.TotalPoints / player.TotalGamesPlayed
         row["Avg Win Margin"] = 0
-        playerHist = History.query.filter(History.PlayerId == player.Id).all()
+        playerHist = History.query.filter(History.PlayerId == player.Id)
         app.logger.debug(playerHist)
-        app.logger.debug(playerHist.query.first())
+        app.logger.debug(playerHist.first())
         # playerId to get all games from history table with that playerId
         # join result with games table using game id games.Winner = history.Side
         # take sum of WinMargin col of output
