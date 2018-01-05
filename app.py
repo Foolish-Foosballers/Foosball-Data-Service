@@ -113,7 +113,7 @@ def getLeaderboard():
         row["Game Win %"] = 1.0*player.GameWins / player.TotalGamesPlayed
         row["Avg Points/Game"] = player.TotalPoints / player.TotalGamesPlayed
         row["Avg Win Margin"] = 0
-        playerHist = db.session.query(func.sum(Games.WinMargin)).join(History).filter(Games.Winner == History.Side).filter(History.PlayerId == player.Id)
+        playerHist = db.session.query(func.sum(Games.WinMargin)).join(History).filter(Games.Winner == History.Side).filter(History.PlayerId == player.Id).scalar()
         # playerHist = db.session.query(func.sum(WinMargin)).filter(History.PlayerId == player.Id).join(Games).filter(Games.Winner == History.Side)
         for row in playerHist:
             app.logger.debug(row)
