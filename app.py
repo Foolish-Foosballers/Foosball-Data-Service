@@ -55,6 +55,7 @@ def homepage():
         <li><a href="/series">/series</a></li>
         <li><a href="/history">/history</a></li>
         <li><a href="/rankings">/rankings</a></li>
+        <li><a href="/leaderboard">/leaderboard</a></li>
     </ul>
     """
 
@@ -117,16 +118,7 @@ def getLeaderboard():
         sumWinMargin = db.session.query(func.sum(Games.WinMargin)).join(History).filter(Games.Winner == History.Side).filter(History.PlayerId == player.Id).scalar()
         row["Avg Win Margin"] = sumWinMargin / player.TotalGamesPlayed 
         leaderboard.append(row)
-
     return json.dumps(leaderboard)
-    # serieswins: check
-    # gamewins: check
-    # totalpoints; check
-    # shutouts; check
-    # Series win %: serieswins / count player id in series table
-    # game win %: gameWins/TotalGamesPlayed
-    # point/game avg: totalpoints/TotalGamesPlayed
-    # avg win margin: sum(winMargin) from games table/TotalGamesPlayed
 
 ####################
 # POST 
