@@ -96,11 +96,32 @@ def getHistory():
 def getRankings():
     sortedPlayers = Players.query.filter(Players.Ranking != 0).order_by(Players.Ranking).all()
     return json.dumps([player.as_dict() for player in sortedPlayers], default=jsonSerial)
+
+@app.route('/leaderboard', methods=['GET'])
+def getLeaderboard():
+    leaderboard = []
+
+    sortedPlayers = Players.query.filter(Players.Ranking != 0).order_by(Players.Ranking).all()
+    for player in sortedPlayers:
+        row = {}
+        row["Series Wins"] = player.SeriesWins
+        row["Game Wins"] = player.GameWins
+        row["Game Losses"] = player.TotalGamesPlayed - player.GameWins
+        row["Points Scored"] = player.TotalPoints
+        row["Shutouts"] = player.Shutouts 
+        row["Game Win %"] = 1.0*player.GameWins / player.TotalGamesPlayed
+        row["Avg Points/Game"] = player.TotalPoints / player.TotalGamesPlayed
+        row["Avg Win Margin"] = 0
+        playerHist = History.query.filter(History.PlayerId = player.Id).all()
+        app.logger.debug(playerHist.query.first())
+        # playerId to get all games from history table with that playerId
+        # join result with games table using game id games.Winner = history.Side
+        # take sum of WinMargin col of output
     # serieswins: check
     # gamewins: check
     # totalpoints; check
-    # shoutouts; check
-    # Series win %: needs calc
+    # shutouts; check
+    # Series win %: serieswins / count player id in series table
     # game win %: gameWins/TotalGamesPlayed
     # point/game avg: totalpoints/TotalGamesPlayed
     # avg win margin: sum(winMargin) from games table/TotalGamesPlayed
