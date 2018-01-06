@@ -106,6 +106,9 @@ def getLeaderboard():
     sortedPlayers = Players.query.filter(Players.Ranking != 0).order_by(Players.Ranking).all()
     for player in sortedPlayers:
         row = {}
+        row["First Name"] = player.FirstName
+        row["Last Name"] = player.LastName
+        row["Ranking"] = player.Ranking
         row["Series Wins"] = player.SeriesWins
         row["Game Wins"] = player.GameWins
         row["Game Losses"] = player.TotalGamesPlayed - player.GameWins
