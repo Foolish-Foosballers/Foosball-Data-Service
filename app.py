@@ -113,10 +113,10 @@ def getLeaderboard():
         row["Shutouts"] = player.Shutouts 
         row["Game Win %"] = 1.0*player.GameWins / player.TotalGamesPlayed
         numSeriesPlayed = db.session.query(func.distinct(Series.Id)).join(History).filter(History.PlayerId == player.Id).count()
-        row["Series Win %"] = 1.0*player.SeriesWins / numSeriesPlayed
-        row["Avg Points/Game"] = player.TotalPoints / player.TotalGamesPlayed
+        row["Series Win %"] = round(1.0*player.SeriesWins / numSeriesPlayed,2)
+        row["Avg Points/Game"] = round(player.TotalPoints / player.TotalGamesPlayed,2)
         sumWinMargin = db.session.query(func.sum(Games.WinMargin)).join(History).filter(Games.Winner == History.Side).filter(History.PlayerId == player.Id).scalar()
-        row["Avg Win Margin"] = sumWinMargin / player.TotalGamesPlayed 
+        row["Avg Win Margin"] = round(sumWinMargin / player.TotalGamesPlayed,2)
         leaderboard.append(row)
     return json.dumps(leaderboard)
 
