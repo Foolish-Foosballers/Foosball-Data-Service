@@ -111,7 +111,7 @@ def getLeaderboard():
         row["Game Losses"] = player.TotalGamesPlayed - player.GameWins
         row["Points Scored"] = player.TotalPoints
         row["Shutouts"] = player.Shutouts 
-        row["Game Win %"] = 100.0*player.GameWins / player.TotalGamesPlayed
+        row["Game Win %"] = round(100.0*player.GameWins / player.TotalGamesPlayed,2)
         numSeriesPlayed = db.session.query(func.distinct(Series.Id)).join(History).filter(History.PlayerId == player.Id).count()
         row["Series Win %"] = round(100.0*player.SeriesWins / numSeriesPlayed,2)
         row["Avg Points/Game"] = round(player.TotalPoints / player.TotalGamesPlayed,2)
