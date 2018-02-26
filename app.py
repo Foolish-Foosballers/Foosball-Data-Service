@@ -72,6 +72,7 @@ def getPlayerById(id):
 @app.route('/players/<username>', methods=['GET'])
 def getPlayerByUsername(username):
     player = Players.query.filter_by(Username=username).first_or_404()
+    app.logger.debug(player.as_dict())
     return json.dumps(player.as_dict(), default=jsonSerial)
 
 @app.route('/games', methods=['GET'])
@@ -102,7 +103,6 @@ def getRankings():
 @app.route('/leaderboard', methods=['GET'])
 def getLeaderboard():
     leaderboard = []
-
     sortedPlayers = Players.query.filter(Players.Ranking != 0).order_by(Players.Ranking).all()
     for player in sortedPlayers:
         row = {}
