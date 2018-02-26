@@ -71,6 +71,7 @@ def getPlayerById(id):
 
 @app.route('/players/<username>', methods=['GET'])
 def getPlayerByUsername(username):
+    app.logger.debug("getting player")
     player = Players.query.filter_by(Username=username).first_or_404()
     app.logger.debug(player.as_dict())
     return json.dumps(player.as_dict(), default=jsonSerial)
