@@ -78,6 +78,7 @@ def getPlayerByUsername(username):
 
 @app.route('/games', methods=['GET'])
 def getGames():
+    app.logger.debug("getting games")
     games = Games.query.all()
     return json.dumps([game.as_dict() for game in games], default=jsonSerial)
 
