@@ -69,7 +69,7 @@ def getPlayers():
 #     player = Players.query.get_or_404(id)
 #     return json.dumps(player.as_dict(), default=jsonSerial)
 
-@app.route('/players/<int:username>', methods=['GET'])
+@app.route('/players/<str:username>', methods=['GET'])
 def getPlayerByUsername(username):
     player = Players.query.filter_by(Username=username).first_or_404()
     return json.dumps(player.as_dict(), default=jsonSerial)
