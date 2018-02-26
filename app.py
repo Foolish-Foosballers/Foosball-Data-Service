@@ -72,8 +72,9 @@ def getPlayerById(id):
 @app.route('/players/<int:username>', methods=['GET'])
 def getPlayerByUsername(username):
     app.logger.debug("getting player")
-    player = Players.query.filter_by(Username=username).first_or_404()
-    app.logger.debug(player.as_dict())
+    # player = Players.query.filter_by(Username=username).first_or_404()
+    # app.logger.debug(player.as_dict())
+    return json.dumps({"sara": "heyo"})
     return json.dumps(player.as_dict(), default=jsonSerial)
 
 @app.route('/games', methods=['GET'])
