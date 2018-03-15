@@ -64,10 +64,10 @@ def getPlayers():
     players = Players.query.all()
     return json.dumps([player.as_dict() for player in players], default=jsonSerial)
 
-# @app.route('/players/<int:id>', methods=['GET'])
-# def getPlayerById(id):
-#     player = Players.query.get_or_404(id)
-#     return json.dumps(player.as_dict(), default=jsonSerial)
+@app.route('/players/<int:id>', methods=['GET'])
+def getPlayerById(id):
+    player = Players.query.get_or_404(id)
+    return json.dumps(player.as_dict(), default=jsonSerial)
 
 @app.route('/players/user/<int:username>', methods=['GET'])
 def getPlayerByUsername(username):
