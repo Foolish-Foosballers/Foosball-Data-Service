@@ -86,7 +86,7 @@ def getGames():
 @app.route('/games/<int:id>', methods=['GET'])
 def getGameById(id):
     game = Games.query.get_or_404(id)
-    return json.dumps(player.as_dict(), default=jsonSerial)
+    return json.dumps(game.as_dict(), default=jsonSerial)
 
 @app.route('/series', methods=['GET'])
 def getSeries():
