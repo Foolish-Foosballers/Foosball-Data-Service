@@ -64,18 +64,22 @@ def getPlayers():
     players = Players.query.all()
     return json.dumps([player.as_dict() for player in players], default=jsonSerial)
 
-@app.route('/players/<int:id>', methods=['GET'])
-def getPlayerById(id):
-    player = Players.query.get_or_404(id)
-    return json.dumps(player.as_dict(), default=jsonSerial)
+# @app.route('/players/<int:id>', methods=['GET'])
+# def getPlayerById(id):
+#     player = Players.query.get_or_404(id)
+#     return json.dumps(player.as_dict(), default=jsonSerial)
 
-@app.route('/players/user/<username>', methods=['GET'])
+@app.route('/players/user/<int:username>', methods=['GET'])
 def getPlayerByUsername(username):
+    username = str(username)
+    app.logger.debug(username)
+    app.logger.debug(type(username))
     player = Players.query.filter_by(Username=username).first_or_404()
     return json.dumps(player.as_dict(), default=jsonSerial)
 
 @app.route('/games', methods=['GET'])
 def getGames():
+    app.logger.debug("getting games")
     games = Games.query.all()
     return json.dumps([game.as_dict() for game in games], default=jsonSerial)
 
@@ -102,7 +106,6 @@ def getRankings():
 @app.route('/leaderboard', methods=['GET'])
 def getLeaderboard():
     leaderboard = []
-
     sortedPlayers = Players.query.filter(Players.Ranking != 0).order_by(Players.Ranking).all()
     for player in sortedPlayers:
         row = {}
