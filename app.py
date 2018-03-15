@@ -49,7 +49,7 @@ def homepage():
         <li><a href="/">/</a></li>
         <li><a href="/players">/players</a></li>
         <li><a>/players/&ltid&gt</a></li>
-        <li><a>/players/&ltusername&gt</a></li>
+        <li><a>/players/user/&ltusername&gt</a></li>
         <li><a href="/games">/games</a></li>
         <li><a>/games/&ltid&gt</a></li>
         <li><a href="/series">/series</a></li>
@@ -69,7 +69,7 @@ def getPlayerById(id):
     player = Players.query.get_or_404(id)
     return json.dumps(player.as_dict(), default=jsonSerial)
 
-@app.route('/players/<username>', methods=['GET'])
+@app.route('/players/user/<username>', methods=['GET'])
 def getPlayerByUsername(username):
     player = Players.query.filter_by(Username=username).first_or_404()
     return json.dumps(player.as_dict(), default=jsonSerial)
